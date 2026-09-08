@@ -1,3 +1,5 @@
+# TP images ##########################
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -20,12 +22,24 @@ im = plt.imread("data/les-mines.jpg")
 im2 = im.copy()
 #print(bool(im2.flags.writeable))
 
-print(type(im2))
-print(np.ndim(im2))
-print(np.shape(im2))
-print(type(im2[0,0,0]))
-print(im2[0,0])
+#print(type(im2))
+#print(np.ndim(im2))
+#print(im2.shape[:2])
+#print(im.itemsize)
+#print(im.dtype)
+#print(im2.max(),im2.min())
 
 #plt.imshow(im2[:10,:10])
 
-plt.show()
+#for i in (2,5,10,20):
+    #plt.imshow(im2[::i,::i])
+    #plt.show()
+
+def sous_image_centree(l,c):
+    i = im2.shape[0] //2
+    j = im2.shape[1] //2
+    sous_im = im2[i-l//2:i+l//2,j-c//2:j+c//2]
+    return sous_im
+
+plt.imshow(sous_image_centree(100,100))
+
