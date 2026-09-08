@@ -15,4 +15,17 @@ image[:,::10]= np.array([0,255,255])
 #plt.show()
 
 im = plt.imread("data/les-mines.jpg")
-im.flags.writeable
+#print(bool(im.flags.writeable))
+
+im2 = im.copy()
+#print(bool(im2.flags.writeable))
+
+print(type(im2))
+print(np.ndim(im2))
+print(np.shape(im2))
+print(type(im2[0,0,0]))
+print(im2[0,0])
+
+#plt.imshow(im2[:10,:10])
+
+plt.show()
