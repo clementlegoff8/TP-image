@@ -87,3 +87,21 @@ for couleur in list(dictionnaire_couleurs.keys()):
 #plt.show()
 
 # Image en sépia ########################################################################################################
+
+matrice_sepia = [[0.393,0.769,0.189],[0.349,0.686,0.168],[0.272,0.534,0.131]]
+
+def sepia(image):
+    sepia = image.copy()
+    l,c,p = image.shape
+    for i in range(l):
+        for j in range(p):
+            sepia[i,j] = np.dot(matrice_sepia,np.array(sepia[i,j]/255.0,dtype=float))
+            sepia[i,j] = (255.0*sepia[i,j]).astype(np.uint8)
+    return sepia
+
+mines = plt.imread("data/les-mines.jpg")
+
+plt.imshow(mines)
+plt.show()
+plt.imshow(sepia(mines))
+plt.show()
