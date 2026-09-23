@@ -94,14 +94,64 @@ def sepia(image):
     sepia = image.copy()
     l,c,p = image.shape
     for i in range(l):
-        for j in range(p):
-            sepia[i,j] = np.dot(matrice_sepia,np.array(sepia[i,j]/255.0,dtype=float))
-            sepia[i,j] = (255.0*sepia[i,j]).astype(np.uint8)
+        for j in range(c):
+            pixel = np.dot(matrice_sepia,np.array(sepia[i,j]/255.0,dtype=float))
+            for k in range(3):
+                if pixel[k] > 1:
+                    pixel[k] = 1
+            sepia[i,j] = 255.0*pixel
     return sepia
 
 mines = plt.imread("data/les-mines.jpg")
 
-plt.imshow(mines)
-plt.show()
-plt.imshow(sepia(mines))
-plt.show()
+#plt.imshow(mines)
+#plt.show()
+#plt.imshow(sepia(mines))
+#plt.show()
+
+# Somme dans une image et overflow ########################################################################################
+
+image_somme = mines[:,:,0] + mines[:,:,1] + mines[:,:,2]
+#print(image_somme.dtype)
+#print(image_somme.max()) #c'est 255 vu qu'on est en uint8 c'est logique...
+
+#plt.imshow(image_somme, cmap="gray")
+#plt.show()
+
+l,c,p = mines.shape
+image_somme2 = np.empty((l,c,1))
+for i in range(l):
+    for j in range(c):
+        image_somme2[i,j] = np.sum(mines[i,j])
+#print(image_somme2.dtype)
+#print(image_somme2.max())
+
+#plt.imshow(image_somme2, cmap="gray")
+#plt.show()
+
+new_im = image_somme2.astype(np.uint8)
+new_im = np.where(new_im >= 127, 255, 0)
+#plt.imshow(new_im, cmap="gray")
+#plt.show()
+#print(np.unique(new_im))
+
+# Exemple de qualité de compression ########################################################################################
+
+from PIL import Image
+
+mines2 = Image.open("data/les-mines.jpg")
+#print(mines2.fp.seek(0, 2))
+#print(np.allclose(np.array(mines2), mines))
+
+plt.imsave("Mines.jpg",mines)
+mines2.save("Mines2.jpg", quality=100)
+
+new_mines = Image.open("Mines.jpg")
+new_mines2 = Image.open("Mines2.jpg")
+#print(new_mines.fp.seek(0, 2))
+#print(new_mines2.fp.seek(0, 2)) #c'est beaucoup plus
+
+#fig, axes = plt.subplots(1, 2)
+#axes[0].imshow(new_mines)
+#axes[1].imshow(new_mines2)
+#plt.show() #aucune différence apparente...
